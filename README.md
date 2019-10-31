@@ -83,6 +83,10 @@ Papa-parse for parsing CSV files
 
 ![Alt text](/src/assets/images/screenshot.png?raw=true "Ace Digital Avenue Code Interview Screenshot")
 
+### App Demo
+
+https://ada-code-test.herokuapp.com/
+
 ### Icon Credits
 
 <div><p>Icon made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p></div>

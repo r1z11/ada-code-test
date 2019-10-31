@@ -78,3 +78,7 @@ Papa-parse for parsing CSV files
 ### Screenshot
 
 ![Alt text](/src/assets/images/screenshot.png?raw=true "Ace Digital Avenue Code Interview Screenshot")
+
+### Icon Credits
+
+<div><p>Icon made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p></div>

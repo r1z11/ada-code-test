@@ -278,9 +278,6 @@ class FileReader extends React.Component {
                         {this.state.csvData ? this.generateSchedule(this.state.csvData) : null}
                     </div>
 
-                    {/* Icon credits
-                    <div className="float-right"><p>Icon made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p></div>*/}
-
                 </header>
             </div>
         );

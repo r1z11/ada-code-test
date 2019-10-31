@@ -1,0 +1,10 @@
+{
+    "name": "Ace Digital Avenue Code Test",
+    "description": "A ReactJS code interview",
+    "repository": "https://github.com/r1z11/ada-code-test",
+    "logo": "https://node-js-sample.herokuapp.com/node.png",
+    "keywords": [
+        "ReactJS",
+        "static"
+    ]
+}

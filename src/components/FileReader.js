@@ -3,6 +3,8 @@ import React from 'react';
 import Papa from 'papaparse';
 // File upload icon
 import fileUpload from '../assets/images/file-upload.png';
+// File approved icon
+import approved from '../assets/images/approved.png';
 // Bootstrap Components
 import Button from "react-bootstrap/Button";
 
@@ -13,7 +15,9 @@ class FileReader extends React.Component {
         this.state = {
             csvfile: null,
             fileName: 'file',
-            csvData: null
+            csvData: null,
+            fileDropped: false,
+            dropTitle: 'Drag and drop CSV file here'
         };
         this.updateData = this.updateData.bind(this);
     }
@@ -36,11 +40,16 @@ class FileReader extends React.Component {
     // Dragged file dropped in drop area
     handleDrop = event => {
         event.preventDefault();
-        console.log('drop event data', event.dataTransfer);
+        console.log('drop event ->', event.dataTransfer);
+
+        let file = event.dataTransfer.files[0];
+        let filename = event.dataTransfer.files[0].name;
 
         this.setState({
-            csvfile: event.dataTransfer.files[0],
-            fileName: event.dataTransfer.files[0].name
+            fileDropped: true,
+            dropTitle: filename,
+            csvfile: file,
+            fileName: filename
         });
     }
 
@@ -65,11 +74,15 @@ class FileReader extends React.Component {
     // Dragged file leaves drop area
     handleDragLeave = event => {
         event.preventDefault();
+        event.stopPropagation(); 
+        
         // Set the dropEffect to none (drop not allowed)
         event.dataTransfer.effectAllowed = "none";
         event.dataTransfer.dropEffect = "none";
 
         console.log('dragLeave event ->', event.dataTransfer);
+        
+        return false;
     }
 
     // Import and parse CSV file
@@ -86,7 +99,10 @@ class FileReader extends React.Component {
     // Update parsed CSV file data
     updateData = result => {
         var data = result.data;
-        this.setState({ csvData: data });
+        this.setState({
+            csvData: data,
+            btnText: 'Scroll to view Schedule'
+        });
 
         console.log('updated csv data', this.state.csvData);
     }
@@ -125,15 +141,6 @@ class FileReader extends React.Component {
         }
         console.log('Times int array', timesInt);
 
-        // Find out how many days the meetings will take
-        let totalTime = 0;
-        for (let i = 0; i < timesInt.length; i++) {
-            totalTime = totalTime + timesInt[i];
-        }
-        let days = totalTime / 410;
-        days = Math.round(days);
-        console.log('No of days', days);
-
         // Create a Presentations and Presenter array
         let presentations = [];
         for (let i = 0; i < csvData.length; i++) {
@@ -141,9 +148,6 @@ class FileReader extends React.Component {
             presentations.push(presentation);
         }
         console.log('Presentations & Presenters', presentations);
-
-        // Create time slots array
-        // let slots = [90, 120, 60, 5, 45, 90];
 
         // Print Schedule by matching the presentations with the time slots
         // Remove the matches from presentations and times arrays after
@@ -192,36 +196,33 @@ class FileReader extends React.Component {
         presentations.splice(times.indexOf('30min'), 1);
         times.splice(times.indexOf('30min'), 1);
 
-        console.log('presentations array after splicing', presentations);
-        console.log('times array after splicing', times);
-
         return (
-            <div className="left">
+            <div>
                 <br />
-                <h2>Day 1</h2>
-                <br /><br />
-                <h4>Morning Session:</h4>
+                <h2 className="text-muted">Day 1</h2>
+                <br />
+                <h4 className="text-muted">Morning Session:</h4>
                 <p>09:00 - 10:30: {one}</p>
                 <p>10:30 - 12:30: {two}</p>
-                <br /><br />
-                <h4>12:30 - 02:00: Lunch</h4>
-                <br /><br />
-                <h4>Afternoon Session:</h4>
+                <br />
+                <h4 className="text-muted">12:30 - 02:00: Lunch</h4>
+                <br />
+                <h4 className="text-muted">Afternoon Session:</h4>
                 <p>02:00 - 03:00: {three}</p>
                 <p>03:00 - 03:05: {four}</p>
                 <p>03:05 - 03:50: {five}</p>
                 <p>03:50 - 05:20: {six}</p>
                 <p>05:20: Networking</p>
                 <br /><br />
-                <h2>Day 2</h2>
-                <br /><br />
-                <h4>Morning Session:</h4>
+                <h2 className="text-muted">Day 2</h2>
+                <br />
+                <h4 className="text-muted">Morning Session:</h4>
                 <p>09:00 - 12:00: {seven}</p>
                 <p>12:00 - 12:30: {eight}</p>
-                <br /><br />
-                <h4>12:30 - 02:00: Lunch</h4>
-                <br /><br />
-                <h4>Afternoon Session:</h4>
+                <br />
+                <h4 className="text-muted">12:30 - 02:00: Lunch</h4>
+                <br />
+                <h4 className="text-muted">Afternoon Session:</h4>
                 <p>02:00 - 02:45: {nine}</p>
                 <p>02:45 - 02:50: {ten}</p>
                 <p>02:50 - 03:20: {eleven}</p>
@@ -244,10 +245,11 @@ class FileReader extends React.Component {
                         className="Drop-Area"
                         onDragOver={(e) => this.handleDragOver(e)}
                         onDragEnter={(e) => this.handleDragEnter(e)}
-                        onDragLeave={(e) => e.preventDefault()}
+                        onDragLeave={(e) => this.handleDragLeave(e)}
                         onDrop={(e) => this.handleDrop(e)}>
-                        <img src={fileUpload} className="App-logo" alt="logo" />
-                        <p>Drag and drop CSV file here</p>
+                        {this.state.fileDropped ? <img src={approved} className="App-logo" alt="logo" /> :
+                            <img src={fileUpload} className="App-logo" alt="logo" />}
+                        <p>{this.state.dropTitle}</p>
                     </div>
 
                     <input
@@ -260,11 +262,13 @@ class FileReader extends React.Component {
                         placeholder={null}
                         onChange={(e) => this.handleBrowse(e)}
                     />
-                    <p />
+
+                    { this.state.csvData ? <h1 className="scroll-alert">Scroll down to view Schedule</h1> : null }
+
                     <Button variant="primary gen-btn" size="lg" onClick={this.importCSV}>Generate Schedule</Button>
 
                     <div className="Schedule">
-                        {this.state.csvData ? this.generateSchedule(this.state.csvData) : null}
+                        { this.state.csvData ? this.generateSchedule(this.state.csvData) : null }
                     </div>
 
                     {/* Icon credits

@@ -26,12 +26,22 @@ class FileReader extends React.Component {
     handleBrowse = event => {
         event.preventDefault();
         console.log('handleBrowse event ->', event);
+        
+        let filename = event.target.files[0].name;
+        
+        console.log('csv file extension ->', filename.substring(filename.lastIndexOf('.')+1, filename.length));
 
         if (event.target.files[0]) {
-            this.setState({
-                csvfile: event.target.files[0],
-                fileName: event.target.files[0].name
-            });
+            if((filename.substring(filename.lastIndexOf('.')+1, filename.length)) === 'csv'){
+                this.setState({
+                    csvfile: event.target.files[0],
+                    fileName: event.target.files[0].name
+                });
+            } else {
+                this.setState({
+                    dropTitle: 'Unsupported file type! Please drop a CSV file'
+                });
+            }
         } else {
             console.log('handleBrowse error - event.target.files undefined');
         }
@@ -44,13 +54,21 @@ class FileReader extends React.Component {
 
         let file = event.dataTransfer.files[0];
         let filename = event.dataTransfer.files[0].name;
+        
+        console.log('csv file extension ->', filename.substring(filename.lastIndexOf('.')+1, filename.length));
 
-        this.setState({
-            fileDropped: true,
-            dropTitle: filename,
-            csvfile: file,
-            fileName: filename
-        });
+        if((filename.substring(filename.lastIndexOf('.')+1, filename.length)) === 'csv'){
+            this.setState({
+                fileDropped: true,
+                dropTitle: filename,
+                csvfile: file,
+                fileName: filename
+            });
+        } else {
+            this.setState({
+                dropTitle: 'Unsupported file type! Please drop a CSV file'
+            });
+        }
     }
 
     // Initialize drop area
@@ -69,20 +87,6 @@ class FileReader extends React.Component {
         event.dataTransfer.dropEffect = "copy";
 
         console.log('dragEnter event ->', event.dataTransfer);
-    }
-
-    // Dragged file leaves drop area
-    handleDragLeave = event => {
-        event.preventDefault();
-        event.stopPropagation(); 
-        
-        // Set the dropEffect to none (drop not allowed)
-        event.dataTransfer.effectAllowed = "none";
-        event.dataTransfer.dropEffect = "none";
-
-        console.log('dragLeave event ->', event.dataTransfer);
-        
-        return false;
     }
 
     // Import and parse CSV file
@@ -235,7 +239,11 @@ class FileReader extends React.Component {
         console.log('CSV file', this.state.csvfile);
 
         return (
-            <div className="App">
+            <div
+                className="App"
+                onDragOver={(e) => this.handleDragOver(e)}
+                onDragEnter={(e) => this.handleDragEnter(e)}
+                onDrop={(e) => this.handleDrop(e)}>
 
                 <header className="App-header">
                     <h2 className="App-Title">Ace Digital Avenue Meetings Scheduler</h2>
@@ -245,7 +253,6 @@ class FileReader extends React.Component {
                         className="Drop-Area"
                         onDragOver={(e) => this.handleDragOver(e)}
                         onDragEnter={(e) => this.handleDragEnter(e)}
-                        onDragLeave={(e) => this.handleDragLeave(e)}
                         onDrop={(e) => this.handleDrop(e)}>
                         {this.state.fileDropped ? <img src={approved} className="App-logo" alt="logo" /> :
                             <img src={fileUpload} className="App-logo" alt="logo" />}
@@ -263,12 +270,12 @@ class FileReader extends React.Component {
                         onChange={(e) => this.handleBrowse(e)}
                     />
 
-                    { this.state.csvData ? <h1 className="scroll-alert">Scroll down to view Schedule</h1> : null }
+                    {this.state.csvData ? <h1 className="scroll-alert">Scroll down to view Schedule</h1> : null}
 
                     <Button variant="primary gen-btn" size="lg" onClick={this.importCSV}>Generate Schedule</Button>
 
                     <div className="Schedule">
-                        { this.state.csvData ? this.generateSchedule(this.state.csvData) : null }
+                        {this.state.csvData ? this.generateSchedule(this.state.csvData) : null}
                     </div>
 
                     {/* Icon credits

@@ -74,3 +74,7 @@ This project uses:
 Bootstrap and react-bootsrap for some UI elements
 
 Papa-parse for parsing CSV files
+
+### Screenshot
+
+![Alt text](/src/assets/images/screenshot.png?raw=true "Ace Digital Avenue Code Interview Screenshot")

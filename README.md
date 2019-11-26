@@ -87,6 +87,10 @@ Papa-parse for parsing CSV files
 
 https://ada-code-test.herokuapp.com/
 
+### Sample data
+
+https://docs.google.com/spreadsheets/d/1fyW-iv-OBL68QAWXazT4uQZldTkkIt1qR-JrnJPqvvk/edit?usp=sharing
+
 ### Icon Credits
 
 <div><p>Icon made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p></div>
